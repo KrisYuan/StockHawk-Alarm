@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -135,36 +136,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     mTitle = getTitle();
     if (isConnected){
-
+      Log.d("mainactivity", "onCreate: setup alarm");
       Intent alarmIntent = new Intent(this, StockTaskService.AlarmReceiver.class);
       alarmIntent.putExtra(StockTaskService.SERVICE_TAG,"periodic");
 
       PendingIntent pi = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
       AlarmManager am = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-//    am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000,pi);
-      am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, System.currentTimeMillis(), 5*1000, pi);
+      am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),5000, pi);
 
-      Intent intent = new Intent(this,StockTaskService.class);
-      intent.putExtra(StockTaskService.SERVICE_TAG,"periodic");
-      startService(intent);
-
-//      long period = 3600L;
-//      long flex = 10L;
-//      String periodicTag = "periodic";
-
-      // create a periodic task to pull stocks once every hour after the app has been opened. This
-      // is so Widget data stays up to date.
-//      PeriodicTask periodicTask = new PeriodicTask.Builder()
-//          .setService(StockTaskService.class)
-//          .setPeriod(period)
-//          .setFlex(flex)
-//          .setTag(periodicTag)
-//          .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
-//          .setRequiresCharging(false)
-//          .build();
-      // Schedule task with tag "periodic." This ensure that only the stocks present in the DB
-      // are updated.
-//      GcmNetworkManager.getInstance(this).schedule(periodicTask);
     }
   }
 
